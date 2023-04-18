@@ -10,10 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.DragState
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.*
 
 private const val TAG = "BasicMapActivity"
 
@@ -57,4 +54,5 @@ fun GoogleMapView(
     if (singaporeState.dragState == DragState.END){
         circleCenter = singaporeState.position
     }
+    var uiSettings by remember { mutableStateOf(MapUiSettings(compassEnabled = false)) }
 }
