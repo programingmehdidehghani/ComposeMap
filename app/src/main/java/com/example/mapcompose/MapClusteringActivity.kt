@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +28,7 @@ import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlin.random.Random
 
 private val TAG = MapClusteringActivity::class.java
 
@@ -39,6 +40,21 @@ class MapClusteringActivity: ComponentActivity() {
 
         }
     }
+}
+
+@Composable
+fun GoogleMapClustering(){
+    val items = remember { mutableStateListOf<MyItem>() }
+    LaunchedEffect(Unit){
+        for (i in 1..10){
+            val position = LatLng(
+                singapore2.latitude + Random.nextFloat(),
+                singapore2.longitude + Random.nextFloat()
+            )
+            items.add(MyItem(position,"Marker","Snippet"))
+        }
+    }
+    GoogleMapClustering(items = items)
 }
 
 @Composable
@@ -99,16 +115,16 @@ data class MyItem(
     val itemTitle: String,
     val itemSnippet: String
 ): ClusterItem {
-    override fun getPosition(): LatLng {
+    override fun getPosition(): LatLng =
         itemPosition
-    }
 
-    override fun getTitle(): String? {
+
+    override fun getTitle(): String? =
         itemTitle
-    }
 
-    override fun getSnippet(): String? {
+
+    override fun getSnippet(): String? =
         itemSnippet
-    }
+
 
 }
