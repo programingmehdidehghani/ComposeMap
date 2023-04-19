@@ -55,4 +55,10 @@ fun GoogleMapView(
         circleCenter = singaporeState.position
     }
     var uiSettings by remember { mutableStateOf(MapUiSettings(compassEnabled = false)) }
+    var shouldAnimateZoom by remember { mutableStateOf(true) }
+    var ticker by remember { mutableStateOf(0) }
+    var mapProperties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+    var mapVisible by remember { mutableStateOf(true) }
 }
