@@ -9,10 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -159,9 +156,28 @@ fun GoogleMapView(
                     coroutineScope.launch {
                         cameraPositionState.animate(CameraUpdateFactory.zoomOut())
                     }
+                } else{
+                    cameraPositionState.move(CameraUpdateFactory.zoomOut())
                 }
             },
+            onZoomIn = {
+                if (shouldAnimateZoom){
+                    coroutineScope.launch {
+                        cameraPositionState.animate(CameraUpdateFactory.zoomIn())
+                    }
+                } else{
+                    cameraPositionState.move(CameraUpdateFactory.zoomIn())
+                }
+                ticker ++
+            },
+            onCameraAnimationCheckedChange = {
+                shouldAnimateZoom = it
+            },
+            onZoomControlsCheckedChange = {
+                uiSettings = uiSettings.copy(zoomControlsEnabled = it)
+            }
         )
+        DebugView(cameraPositionState, singaporeState)
     }
 }
 
@@ -196,6 +212,20 @@ fun ZoomControls(
 ) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         MapButton("-", onClick = { onZoomOut() })
+        MapButton( "+", onClick = { onZoomIn })
+        Column(verticalArrangement = Arrangement.Center) {
+           Text(text = "Camera Animations On?")
+            Switch(
+                isCameraAnimationChecked,
+                onCheckedChange = onCameraAnimationCheckedChange,
+                modifier = Modifier.testTag("cameraAnimations")
+            )
+            Text(text = "Zoom Controls On?")
+            Switch(
+                isZoomControlsEnabledChecked,
+                onCheckedChange = onZoomControlsCheckedChange
+            )
+        }
     }
 
 }
