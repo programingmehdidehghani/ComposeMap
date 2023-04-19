@@ -2,6 +2,7 @@ package com.example.mapcompose
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -61,4 +62,19 @@ fun GoogleMapView(
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
     var mapVisible by remember { mutableStateOf(true) }
+
+    if (mapVisible){
+        GoogleMap(
+            modifier = modifier,
+            cameraPositionState = cameraPositionState,
+            properties = mapProperties,
+            uiSettings = uiSettings,
+            onMapLoaded = onMapLoad,
+            onPOIClick = {
+                Log.d(TAG,"POI clicked: ${it.name}")
+            }
+        ){
+            
+        }
+    }
 }
