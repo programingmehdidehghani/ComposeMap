@@ -18,13 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mapcompose.ui.theme.MapComposeTheme
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.*
 import kotlin.contracts.ExperimentalContracts
-import com.google.maps.android.compose.theme.MapsComposeSampleTheme
 
 private const val TAG = "BasicMapActivity"
 
@@ -203,7 +203,7 @@ fun DebugView(
 @Preview
 @Composable
 fun GoogleMapViewPreview(){
-    MapsComposeSampleTheme{
+    MapComposeTheme{
         GoogleMapView(Modifier.fillMaxSize())
     }
 }
