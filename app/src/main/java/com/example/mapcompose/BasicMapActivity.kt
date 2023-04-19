@@ -16,14 +16,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mapcompose.ui.theme.MapComposeTheme
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.*
+import kotlinx.coroutines.launch
 import kotlin.contracts.ExperimentalContracts
 
 private const val TAG = "BasicMapActivity"
@@ -126,7 +130,38 @@ fun GoogleMapView(
         }
     }
     Column {
-
+        MapTypeControls(onMapTypeClick = {
+            Log.d(TAG, "Selected map type $it")
+            mapProperties = mapProperties.copy(mapType = it)
+        })
+        Row {
+            MapButton(
+                text = "Reset Map",
+                onClick = {
+                    mapProperties = mapProperties.copy(mapType = MapType.NORMAL)
+                    cameraPositionState.position = defaultCameraPosition
+                    singaporeState.position = singapore
+                    singaporeState.hideInfoWindow()
+                }
+            )
+            MapButton(
+                text = "oggle Map",
+                onClick = { mapVisible = !mapVisible },
+                modifier = Modifier.testTag("toggleMapVisibility")
+            )
+        }
+        val coroutineScope = rememberCoroutineScope()
+        ZoomControls(
+            shouldAnimateZoom,
+            uiSettings.zoomControlsEnabled,
+            onZoomOut = {
+                if (shouldAnimateZoom){
+                    coroutineScope.launch {
+                        cameraPositionState.animate(CameraUpdateFactory.zoomOut())
+                    }
+                }
+            },
+        )
     }
 }
 
@@ -158,7 +193,7 @@ fun ZoomControls(
     onZoomIn: () -> Unit,
     onCameraAnimationCheckedChange: (Boolean) -> Unit,
     onZoomControlsCheckedChange: (Boolean) -> Unit
-){
+) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         MapButton("-", onClick = { onZoomOut() })
     }
@@ -166,7 +201,7 @@ fun ZoomControls(
 }
 
 @Composable
-fun MapButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier){
+fun MapButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         modifier = modifier.padding(4.dp),
         colors = ButtonDefaults.buttonColors(
@@ -183,7 +218,7 @@ fun MapButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier){
 fun DebugView(
     cameraPositionState: CameraPositionState,
     markerState: MarkerState
-){
+) {
     Column(
         Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center
@@ -202,8 +237,8 @@ fun DebugView(
 
 @Preview
 @Composable
-fun GoogleMapViewPreview(){
-    MapComposeTheme{
+fun GoogleMapViewPreview() {
+    MapComposeTheme {
         GoogleMapView(Modifier.fillMaxSize())
     }
 }
