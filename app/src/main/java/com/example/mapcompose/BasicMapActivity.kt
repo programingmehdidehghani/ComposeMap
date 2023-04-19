@@ -2,24 +2,29 @@ package com.example.mapcompose
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.BoringLayout
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.*
 import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
+import com.google.maps.android.compose.theme.MapsComposeSampleTheme
 
 private const val TAG = "BasicMapActivity"
 
@@ -130,7 +135,8 @@ fun MapTypeControls(
     onMapTypeClick: (MapType) -> Unit
 ) {
     Row(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .horizontalScroll(state = ScrollState(0)),
         horizontalArrangement = Arrangement.Center
     ) {
@@ -146,6 +152,59 @@ fun MapTypeButton(type: MapType, onClick: () -> Unit) =
 
 @Composable
 fun ZoomControls(
-    
-)
+    isCameraAnimationChecked: Boolean,
+    isZoomControlsEnabledChecked: Boolean,
+    onZoomOut: () -> Unit,
+    onZoomIn: () -> Unit,
+    onCameraAnimationCheckedChange: (Boolean) -> Unit,
+    onZoomControlsCheckedChange: (Boolean) -> Unit
+){
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        MapButton("-", onClick = { onZoomOut() })
+    }
+
+}
+
+@Composable
+fun MapButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier){
+    Button(
+        modifier = modifier.padding(4.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.onPrimary,
+            contentColor = MaterialTheme.colors.primary
+        ),
+        onClick = onClick
+    ) {
+        Text(text = text, style = MaterialTheme.typography.body1)
+    }
+}
+
+@Composable
+fun DebugView(
+    cameraPositionState: CameraPositionState,
+    markerState: MarkerState
+){
+    Column(
+        Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        val moving =
+            if (cameraPositionState.isMoving) "Moving" else "not moving"
+        Text(text = "camera is $moving")
+        Text(text = "Camera position is ${cameraPositionState.position}")
+        Spacer(modifier = Modifier.height(4.dp))
+        val dragging =
+            if (markerState.dragState == DragState.DRAG) "dragging" else "not dragging"
+        Text(text = "Marker is $dragging")
+        Text(text = "Marker position is ${markerState.position}")
+    }
+}
+
+@Preview
+@Composable
+fun GoogleMapViewPreview(){
+    MapsComposeSampleTheme{
+        GoogleMapView(Modifier.fillMaxSize())
+    }
+}
 
