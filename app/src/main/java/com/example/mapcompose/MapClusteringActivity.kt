@@ -37,7 +37,7 @@ class MapClusteringActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+           GoogleMapClustering()
         }
     }
 }
