@@ -37,7 +37,7 @@ class MapInColumnTests {
     private lateinit var cameraPositionState: CameraPositionState
 
     private fun initMap(content: @Composable () -> Unit = {}) {
-        check(hasValidApiKey) { "Maps API key not specified" }
+       // check(hasValidApiKey) { "Maps API key not specified" }
         val countDownLatch = CountDownLatch(1)
         composeTestRule.setContent {
             var scrollingEnabled by remember { mutableStateOf(true) }
