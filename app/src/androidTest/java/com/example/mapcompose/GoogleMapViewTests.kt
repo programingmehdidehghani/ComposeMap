@@ -6,12 +6,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.CameraPositionState
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -57,12 +59,41 @@ class GoogleMapViewTests {
     }
 
     @Test
-    fun testStartingCameraPosition(){
+    fun testStartingCameraPosition() {
+        initMap()
+        startingPosition.assertEquals(cameraPositionState.position.target)
+    }
+
+    @Test
+    fun testCameraReportsMoving(){
         initMap()
         assertEquals(CameraMoveStartedReason.NO_MOVEMENT_YET,cameraPositionState.cameraMoveStartedReason)
-        zoom(
+        zoom(shouldAnimate = true, zoomIn = true){
+            composeTestRule.waitUntil(1000) {
+                cameraPositionState.isMoving
+            }
+            assertTrue(cameraPositionState.isMoving)
+            assertEquals(CameraMoveStartedReason.DEVELOPER_ANIMATION, cameraPositionState.cameraMoveStartedReason)
+        }
+    }
 
-        )
+    @Test
+    fun testCameraReportsNotMoving(){
+        initMap()
+        zoom(shouldAnimate = true,zoomIn = true){
+            composeTestRule.waitUntil(1000) {
+                cameraPositionState.isMoving
+            }
+            composeTestRule.waitUntil(5000) {
+                !cameraPositionState.isMoving
+            }
+            assertFalse(cameraPositionState.isMoving)
+        }
+    }
+
+    @Test
+    fun testCameraZoomInAnimation(){
+        
     }
 
     private fun zoom(
@@ -75,6 +106,10 @@ class GoogleMapViewTests {
                 .assertIsDisplayed()
                 .performClick()
         }
-        composeTestRule
+        composeTestRule.onNodeWithText(if (zoomIn) "+" else "-")
+            .assertIsDisplayed()
+            .performClick()
+
+        assertionBlock()
     }
 }
