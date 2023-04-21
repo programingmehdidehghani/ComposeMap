@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MapCompose</string>
-    <string name="google_maps_key">AIzaSyDKSzbjVsr073BDLaV91wleGRCWHb_ugmY</string>
+    <string name="google_maps_key">AIzaSyDsfdrZULsyJJdlbHuT-vlXiX4g8sEQgDU</string>
     <string name="main_activity_title">"Maps Compose Demos \uD83D\uDDFA"</string>
     <string name="basic_map_activity">Basic Map</string>
     <string name="map_in_column_activity">Map In Column</string>
@@ -8,4 +8,5 @@
     <string name="location_tracking_activity">Location Tracking</string>
     <string name="scale_bar_activity">Scale Bar</string>
     <string name="street_view">Street View</string>
+    //AIzaSyDKSzbjVsr073BDLaV91wleGRCWHb_ugmY
 </resources>

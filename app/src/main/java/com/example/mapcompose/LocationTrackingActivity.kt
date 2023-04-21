@@ -1,5 +1,6 @@
 package com.example.mapcompose
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -38,6 +39,7 @@ class LocationTrackingActivity : ComponentActivity() {
     private val locationSource = MyLocationSource()
     private var counter = 0
 
+    @SuppressLint("SuspiciousIndentation")
     private val locationFlow = callbackFlow {
         while (true) {
           ++ counter
