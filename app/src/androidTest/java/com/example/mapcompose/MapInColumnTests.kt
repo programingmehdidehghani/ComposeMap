@@ -20,6 +20,7 @@ import com.google.maps.android.compose.CameraPositionState
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.channels.Channel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
